@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Todo_MVC.Models.Tasks>
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script defer src="~/Scripts/bootstrap.min.js"></script>
+</head>
+<body class="p-3">
+    @using (Html.BeginForm("Add", "Todo", FormMethod.Post, new { @class = "", enctype = "multipart/form-data" }))
+    {
+        <div class="bg-danger p-3">
+            <h3 class="text-center text-white">TODO LIST</h3>
+            <div class="d-flex">
+                <input type="text" name="name" placeholder="tache..." required class="form-control w-75 rounded-0 p-3" />
+                <button class="btn btn-primary w-25 rounded-0 p-3">
+                    AJOUTER
+                </button>
+            </div>
+        </div>
+    }
+
+    @foreach (var item in Model)
+    {
+        <div class="border p-3 d-flex justify-content-between align-items-center" onclick="toggleState">
+            <div>
+                @if (item.Completed)
+                {
+                    <span>✔</span>
+                    <span class="text-decoration-line-through">
+                        @Html.ActionLink(@item.Name, "Toggle", new { id = item.Id, completed = item.Completed }, new { @class = "text-decoration-none" })
+                    </span>
+                }
+                else
+                {
+                    <span class="ps-4 ">
+                        @Html.ActionLink(@item.Name, "Toggle", new { id = item.Id, completed = item.Completed }, new { @class = "text-decoration-none" })
+                    </span>
+                }
+
+            </div>
+            <div>
+               
+               <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="openModal(@item.Id, '@item.Name')" >
+                🖋️
+               </button>
+
+                @Html.ActionLink("❌", "Delete", new { id = item.Id }, new { @class = "btn btn-outline-danger" })
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modification</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"  >
+                        @using (Html.BeginForm("Update", "Todo", FormMethod.Post, new { @class = "", enctype = "multipart/form-data" }))
+                        {
+                            <div class="bg-danger p-3">
+                               
+                                <div class="d-flex">
+                                    <input  id="taske_id_modif" type="text" name="id" placeholder="tache..." required class="form-control w-75 rounded-0 p-3 d-none" />
+                                    <input  id="taske_name_modif" type="text" name="name" placeholder="tache..." required class="form-control w-75 rounded-0 p-3" />
+                                    <button class="btn btn-primary w-25 rounded-0 p-3">
+                                        Modiffier
+                                    </button>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        
+        <script>
+            function openModal(id, name) {
+                document.getElementById('taske_id_modif').value = id;
+                document.getElementById('taske_name_modif').value = name;
+            }
+        </script>
+
+    }
+
+
+</body>
+
+</html>
